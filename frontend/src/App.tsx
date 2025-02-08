@@ -62,13 +62,13 @@ export default function Home() {
   const [selectedEventId, setSelectedEventId] = useState<string>("0")
 
   const { isLoaded, loadError } = useLoadScript({
-    googleMapsApiKey: process.env.NEXT_PUBLIC_API_KEY as string,
+    googleMapsApiKey: process.env.REACT_APP_API_KEY as string,
     libraries: [], // Explicitly define libraries, even if empty
   });
 
   // updates event list
   const fetchEvents = async() => {
-    const response = await fetch(process.env.NEXT_PUBLIC_API_ADDR + '/api/events')
+    const response = await fetch(process.env.REACT_APP_API_ADDR + '/api/events')
     if (response.ok) {
       const data = await response.json()
       setEvents(data)
@@ -85,7 +85,7 @@ export default function Home() {
 
   // updates event types
   const fetchEventTypes = async() => {
-    const response = await fetch(process.env.NEXT_PUBLIC_API_ADDR + '/api/event-types',
+    const response = await fetch(process.env.REACT_APP_API_ADDR + '/api/event-types',
       {
         method: "GET",
         headers: {
@@ -102,7 +102,7 @@ export default function Home() {
 
   const updateEventLastSeen = async(event: Event, active: Boolean) => {
     if (active) {
-      const response = await fetch(process.env.NEXT_PUBLIC_API_ADDR + '/api/sighting/'+ event.id, {
+      const response = await fetch(process.env.REACT_APP_API_ADDR + '/api/sighting/'+ event.id, {
         method: 'POST',
         body: JSON.stringify({
           lastSeen: new Date().toISOString(),
@@ -113,7 +113,7 @@ export default function Home() {
         }
       })
     } else {
-      const response = await fetch(process.env.NEXT_PUBLIC_API_ADDR + '/api/sighting/' + event.id, {
+      const response = await fetch(process.env.REACT_APP_API_ADDR + '/api/sighting/' + event.id, {
         method: 'POST',
         body: JSON.stringify({
           remove: true,
