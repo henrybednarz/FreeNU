@@ -1,38 +1,89 @@
-.App {
-  text-align: center;
+.sidebar {
+  width: 50vh;
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  left: -50vh;
+  background-color: #f8f9fa;
+  overflow-y: auto;
+  transition: left 0.3s ease;
+  padding: 20px;
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+.sidebar.active {
+  left: 0px;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+.info-block {
+  margin-bottom: 20px;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+.addSidebar {
+  width: 50vh;
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  left: -50vh;
+  background-color: #f8f9fa;
+  overflow-y: auto;
+  transition: left 0.3s ease;
+  padding: 20px;
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+}
+
+.addSidebar.active {
+  left: 0px;
+}
+
+.info-block {
+  margin-bottom: 20px;
+}
+
+html,
+body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+#__next {
+  height: 100%;
+}
+
+#imgButton {
+  width: 100%;
+  height: 100%;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
 }
 
-.App-link {
-  color: #61dafb;
+#popup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  -webkit-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.fade-out {
+  opacity: 1;
+  transition: opacity 0.25s ease-out;
+}
+
+.fade-out button {
+  opacity: 1;
+  transition: opacity 0.25s ease-out;
+}
+
+.fade-out button:active {
+  opacity: 0;
+}
+
+.fade-in {
+  opacity: 0;
+  transition: opacity 0.25s ease-in;
+  opacity: 1;
 }
