@@ -63,7 +63,6 @@ export default function Home() {
 
   const { isLoaded, loadError } = useLoadScript({
     googleMapsApiKey: process.env.REACT_APP_API_KEY as string,
-    libraries: [], // Explicitly define libraries, even if empty
   });
 
   // updates event list
@@ -73,7 +72,6 @@ export default function Home() {
       const data = await response.json()
       setEvents(data)
     }
-    console.log("hi")
   }
 
   const recenter = (lat: number, lng: number) => {
@@ -209,8 +207,10 @@ export default function Home() {
   };
 
   const loadLibraries = useCallback(async () => {
+    // console.log("window.google:", window.google, "window.google.maps:", window.google.maps)
     if (window.google && window.google.maps) {
       const { AdvancedMarkerElement, PinElement } = (await window.google.maps.importLibrary("marker")) as google.maps.MarkerLibrary
+      // console.log("recieved response", AdvancedMarkerElement, PinElement)
       setAdvancedMarkerElement(() => AdvancedMarkerElement)
       setPinElement(() => PinElement)
       setLibrariesLoaded(true)
@@ -278,19 +278,13 @@ export default function Home() {
     loadLibraries()
   }, [])
 
-  // Should be run after connected to google API!
-  useEffect(() => {
-    if (isLoaded) {
-      loadLibraries()
-    }
-  }, [isLoaded])
-
   // 
   useEffect(() => {
+    // console.log(isLoaded, map, events.length, AdvancedMarkerElement, PinElement)
     if (isLoaded && map && events.length > 0 && AdvancedMarkerElement && PinElement) {
       loadMarkers()
     }
-  }, [isLoaded, events, map, librariesLoaded, pinIcons])
+  }, [map, AdvancedMarkerElement, PinElement, events])
 
   if (loadError) return <div>Error loading maps</div>
   if (!isLoaded) return <div>Loading...</div>
