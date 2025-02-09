@@ -3,15 +3,37 @@ import smtplib
 import smtplib
 import sqlite3
 from email.message import EmailMessage
-from email.mime.text import MIMEText
+from email.mime.text import MIMEText, MIMEMultipart
 from collections import defaultdict
-
 
 def loadServer():
     server = smtplib.SMTP('smtp.gmail.com', 587)
     server.starttls()
     server.login("freenortheastern", "ltfq fjln jytd yuyv")
     return server
+    # Make sure to server.quit()
+
+
+def genEmailTemplate(event):
+    msg = MIMEMultipart('alternative')
+    msg['Subject'] = "free event"
+    msg['From'] = 'freenortheastern@gmail.com'
+
+    with open('../notifications/template.html', 'r') as infile:
+        htmlString = infile.read()
+    infile.close()
+
+    htmlText = MIMEText(html, 'html')
+    msg.set_content(htmlText)
+    return msg
+
+
+def sendMail(emailTemplate, toAddresses, server):
+    server = loadServer()
+    for addr in toAddresses:
+        server.sendMail('freenortheastern@gmail.com', addr, emailTemplate)
+    server.quit()
+
 
 class FreeNUEmailer:
     def __init__(self):
