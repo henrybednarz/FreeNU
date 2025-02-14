@@ -4,9 +4,9 @@ import React, { useState, useEffect } from 'react';
 import { Event } from '../interfaces/Event';
 import '../App.css'
 
-export default function StillHere({event, updateSeen}: {event: Event, updateSeen: (event: Event, active: Boolean) => void}) {
+export default function StillHere({event, updateSeen}: {event: Event, updateSeen: (event: Event, active: boolean) => void}) {
     const [receivedFeedback, setReceivedFeedback] = useState(false)
-    const handleClick = ((event: Event, active: Boolean) => {
+    const handleClick = ((event: Event, active: boolean) => {
         updateSeen(event, active)
         setReceivedFeedback(true)
     })

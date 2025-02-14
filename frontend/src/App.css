@@ -87,3 +87,22 @@ body {
   transition: opacity 0.25s ease-in;
   opacity: 1;
 }
+
+.sidebar-content {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  overflow: hidden;
+}
+
+.events-list {
+  flex-grow: 1; /* Pushes the email box to the bottom */
+  overflow-y: auto; /* Allows scrolling for events */
+}
+
+.info-box {
+  padding: 10px;
+  background: #f8f9fa;
+  text-align: center;
+  border-top: 1px solid #ddd;
+}

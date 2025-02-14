@@ -98,7 +98,7 @@ export default function Home() {
     }
   }
 
-  const updateEventLastSeen = async(event: Event, active: Boolean) => {
+  const updateEventLastSeen = async(event: Event, active: boolean) => {
     if (active) {
       const response = await fetch(process.env.REACT_APP_API_ADDR + '/api/sighting/'+ event.id, {
         method: 'POST',
@@ -207,12 +207,13 @@ export default function Home() {
   };
 
   const loadLibraries = useCallback(async () => {
-    // console.log("window.google:", window.google, "window.google.maps:", window.google.maps)
+    //console.log("window.google:", window.google, "window.google.maps:", window.google.maps)
     if (window.google && window.google.maps) {
       const { AdvancedMarkerElement, PinElement } = (await window.google.maps.importLibrary("marker")) as google.maps.MarkerLibrary
-      // console.log("recieved response", AdvancedMarkerElement, PinElement)
+      console.log("recieved response", AdvancedMarkerElement, PinElement)
       setAdvancedMarkerElement(() => AdvancedMarkerElement)
       setPinElement(() => PinElement)
+      //console.log("loaded pin and marker")
       setLibrariesLoaded(true)
     }
   }, [])
@@ -280,7 +281,7 @@ export default function Home() {
 
   // 
   useEffect(() => {
-    // console.log(isLoaded, map, events.length, AdvancedMarkerElement, PinElement)
+    //console.log("trying to load", isLoaded, map, events.length, AdvancedMarkerElement, PinElement)
     if (isLoaded && map && events.length > 0 && AdvancedMarkerElement && PinElement) {
       loadMarkers()
     }

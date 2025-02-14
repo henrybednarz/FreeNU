@@ -4,7 +4,7 @@ import { Event } from '../interfaces/Event.tsx';
 import TargetEvent from './TargetEvent.tsx';
 import StillHere from './StillHere.tsx'
 
-export default function EventItem({event, map, updateSeen, selectedEventId, setSelectedEventId, setIsOpen}: {event: Event, map: google.maps.Map | null, updateSeen: (event: Event, active: Boolean) => void, selectedEventId: string, setSelectedEventId: (id: string) => void, setIsOpen: (state: boolean) => void }) {
+export default function EventItem({event, map, updateSeen, selectedEventId, setSelectedEventId, setIsOpen}: {event: Event, map: google.maps.Map | null, updateSeen: (event: Event, active: boolean) => void, selectedEventId: string, setSelectedEventId: (id: string) => void, setIsOpen: (state: boolean) => void }) {
     const eventTypeIcons: { [key: string]: string } = {
         "drinks": '☕️',
         'food': '🍽',

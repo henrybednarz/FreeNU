@@ -66,10 +66,6 @@ def load_users():
     for u in users])
 
 def delete_user(user_id):
-  user = User.query.filter_by(id=user_id).first()
-  if not user:
-    return user_id
-
   try:
     user = User.query.filter_by(id=user_id).delete()
     db.session.commit()
@@ -78,7 +74,6 @@ def delete_user(user_id):
     db.session.rollback()
     return None
     
-
 
 def updateLastSeen(id):
   event = Event.query.filter_by(id=id, active=True).first()
@@ -124,6 +119,18 @@ def add_event(data: dict):
     db.session.rollback()
     return None
 
+def add_user(data: dict):
+  try:
+    new_user = User(
+      email=data["email"]
+    )
+    db.session.add(new_user)
+    db.session.commit()
+    return new_user
+  except IntegrityError:
+    db.session.rollback()
+    return None
+
 @app.route('/api/events', methods=['GET', 'OPTIONS'])
 def get_events():
   active_events = load_events()
@@ -159,9 +166,22 @@ def get_users():
   users = load_users()
   return users, 200
 
-@app.route('/api/unsubsubsribe/<int:user_id>', methods=['POST', 'OPTIONS'])
-def remove_user(user_id):
-  return delete_user(user_id), 200
+@app.route('/api/subscribe/', methods=['POST', 'OPTIONS'])
+def addUser():
+  data = request.json
+  r = add_user(data)
+  if r:
+    return "success", 200
+  else:
+    return "fail", 400
+
+@app.route('/api/unsubscribe/<int:user_id>', methods=['POST', 'OPTIONS'])
+def removeUser(id):
+  x = delete_user(id)
+  if x:
+    return "success", 200
+  else:
+    return "fail", 400
 
 if __name__ == '__main__':
   app.run(debug=True)

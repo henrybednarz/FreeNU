@@ -108,14 +108,12 @@ export default function AddEventSidebar({ isOpen, setIsOpen, map, eventTypes, se
                     type: "danger"
                 })
                 // Create a failure alert
-            }
-            
-            
+            }  
         }
     }
 
     const postEvent = async(form: FormData) => {
-        const response = await fetch(process.env.NEXT_PUBLIC_API_ADDR + '/api/submit', {
+        const response = await fetch(process.env.REACT_APP_API_ADDR + '/api/submit', {
             method: 'POST',
             body: JSON.stringify({
                 title: form.name,
