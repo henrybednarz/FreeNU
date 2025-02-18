@@ -6,6 +6,7 @@ import AddEventSidebar from './components/AddEventSidebar.tsx'
 // Interfaces
 import { Event } from './interfaces/Event.tsx'
 import { Alert } from './interfaces/Alert.tsx'
+import { Location } from './interfaces/Location.tsx'
 
 // CSS
 import './App.css'
@@ -25,6 +26,9 @@ export default function Home() {
 
     const [selectedEventId, setSelectedEventId] = useState<string>("0")
     const [alerts, setAlerts] = useState<Alert[]>([])
+
+    const [selectedLocation, setSelectedLocation] = useState<Location | null>(null)
+    const [isSelectingLocation, setIsSelectingLocation] = useState<boolean>(false)
 
 
     // API Calls
@@ -61,6 +65,27 @@ export default function Home() {
         setShowAddEvent(false)
     }
 
+    const addAlert = (alert: Alert) => {
+        setAlerts([...alerts, alert])
+    }
+
+    // Location Selection
+    const handleSelectLocation = () => {
+        setIsSelectingLocation(true)
+        setShowAddEvent(false)
+        addAlert({
+            text: "select location on the map",
+            type: "warning",
+            id: Date.now.toString()
+        })
+    }
+
+    const handleAfterSelectLocation = (location: Location) => {
+        setSelectedLocation(location)
+        setShowAddEvent(true)
+        setIsSelectingLocation(false)
+    }
+
     // Map Commands
     const handleSelectEvent = (id : string) => {
         handleEventListClick()
@@ -94,6 +119,9 @@ export default function Home() {
                 handleSelectEvent={handleSelectEvent}
                 setMap={setMap}
                 userLocation={userLocation}
+                handleAfterSelectLocation={handleAfterSelectLocation}
+                isSelectingLocation={isSelectingLocation}
+                selectedLocation={selectedLocation}
             />
             <div style={{position: 'absolute', left: "50%", transform: "translate(-50%, -50%)", top: '8%', alignItems: 'start'}}>
                 <AlertBar
@@ -120,16 +148,17 @@ export default function Home() {
                 updateSeen={updateEventLastSeen}
                 selectedEventId={selectedEventId}
                 setSelectedEventId={setSelectedEventId}
-                addAlert={(alert: Alert) => setAlerts([...alerts, alert])}
+                addAlert={addAlert}
+                userLocation={userLocation}
             />
             <AddEventSidebar
                 isOpen={showAddEvent}
                 setIsOpen={setShowAddEvent}
                 map={map}
                 eventTypes={eventTypes}
-                selectedLocation={null}
-                onSelectLocation={() => console.log('hi')}
-                addAlert={(alert: Alert) => setAlerts([...alerts, alert])}
+                selectedLocation={selectedLocation}
+                onSelectLocation={handleSelectLocation}
+                addAlert={addAlert}
             />
             
         </div>

@@ -3,7 +3,7 @@ import smtplib
 import smtplib
 import sqlite3
 from email.message import EmailMessage
-from email.mime.text import MIMEText, MIMEMultipart
+from email.mime.text import MIMEText
 from collections import defaultdict
 
 typeEmojis = {
@@ -22,7 +22,7 @@ def loadServer():
 
 
 def genEmailTemplate(event):
-    msg = MIMEMultipart('alternative')
+    msg = EmailMessage()
     msg['Subject'] = "free event"
     msg['From'] = 'freenortheastern@gmail.com'
 

@@ -6,13 +6,15 @@ import EmailSubmission from './EmailSubmission.tsx';
 import "bootstrap-icons/font/bootstrap-icons.css";
 import "../App.css";
 
-export default function EventSidebar({ isOpen, setIsOpen, events, map, updateSeen, selectedEventId, setSelectedEventId, addAlert }: { 
+export default function EventSidebar({ isOpen, setIsOpen, events, map, updateSeen, selectedEventId, setSelectedEventId, addAlert, userLocation }: { 
     isOpen: boolean, 
     setIsOpen: (state: boolean) => void, 
     events: Event[], map: google.maps.Map | null, 
     updateSeen: (event: Event, active: boolean) => void, 
-    selectedEventId: string, setSelectedEventId: (id: string) => void 
-    addAlert: (alert: Alert) => void
+    selectedEventId: string, 
+    setSelectedEventId: (id: string) => void,
+    addAlert: (alert: Alert) => void,
+    userLocation: {lat: number, lng: number} | null,
 }) {
     const [emailOpen, setEmailOpen] = useState(false);
     const eventRefs = useRef<{ [key: string]: HTMLDivElement | null }>({});
@@ -52,6 +54,7 @@ export default function EventSidebar({ isOpen, setIsOpen, events, map, updateSee
                                 selectedEventId={selectedEventId}
                                 setSelectedEventId={setSelectedEventId}
                                 setIsOpen={setIsOpen}
+                                userLocation={userLocation}
                             />
                         </div>
                     ))}

@@ -1,7 +1,7 @@
-import React, { useRef, useEffect, useMemo } from 'react';
+import React, { useRef, useEffect, useMemo, useState } from 'react';
 import { GoogleMap, useLoadScript } from '@react-google-maps/api';
 import { Event } from '../interfaces/Event.tsx';
-import { parseArgs } from 'util';
+import { Location } from '../interfaces/Location.tsx'
 
 const libraries: ("places" | "geometry" | "drawing" | "visualization" | "marker")[] = ["marker"];
 const mapOptions = {
@@ -17,11 +17,14 @@ userIcon.src = "/icons/person-circle.svg";
 userIcon.style.height = "3vh"
 userIcon.style.width = "3vh"
 
-const MapComponent = ({ events, handleSelectEvent, setMap, userLocation } : { 
+const MapComponent = ({ events, handleSelectEvent, setMap, userLocation, handleAfterSelectLocation, isSelectingLocation, selectedLocation } : { 
     events: Event[], 
     handleSelectEvent: (id: string) => void, 
     setMap: (map: google.maps.Map) => void, 
-    userLocation: null | {lat: number, lng: number} 
+    userLocation: null | Location,
+    handleAfterSelectLocation: (location: Location) => void,
+    isSelectingLocation: boolean,
+    selectedLocation: Location | null
 }) => {
     const { isLoaded, loadError } = useLoadScript({
         googleMapsApiKey: process.env.REACT_APP_API_KEY as string,
@@ -30,8 +33,16 @@ const MapComponent = ({ events, handleSelectEvent, setMap, userLocation } : {
 
     const mapRef = useRef<google.maps.Map | null>(null);
     const center = useMemo(() => ({ lat: 42.33666532, lng: -71.08749965 }), []);
-    var userMarker: google.maps.marker.AdvancedMarkerElement | null = null;
-    var eventMarkers: google.maps.marker.AdvancedMarkerElement[] = []
+    const [userMarker, setUserMarker] = useState<google.maps.marker.AdvancedMarkerElement | null>(null);
+    const [eventMarkers, setEventMarkers] = useState<google.maps.marker.AdvancedMarkerElement[]>([]);
+    const [selectedLocationMarker, setSelectedLocationMarker] = useState<google.maps.marker.AdvancedMarkerElement | null>(null);
+
+    const handleMapClick = (e: google.maps.MapMouseEvent) => {
+        if (isSelectingLocation && e.latLng) {
+            handleAfterSelectLocation({lat: e.latLng.lat(), lng: e.latLng.lng()})
+        }
+    }
+
     const getPinIcon = (type: string, PinElement) => {
         if (!PinElement) return null;
       
@@ -83,20 +94,32 @@ const MapComponent = ({ events, handleSelectEvent, setMap, userLocation } : {
 
             if (userLocation) {
                 if (userMarker) {
-                    userMarker.map = null;
+                    userMarker.position = userLocation;
+                } else {
+                    setUserMarker(new AdvancedMarkerElement({
+                        map: mapRef.current,
+                        position: userLocation,
+                        content: userIcon,
+                    }))
                 }
-                userMarker = new AdvancedMarkerElement({
-                    map: mapRef.current,
-                    position: userLocation,
-                    content: userIcon,
-                });
                 mapRef.current.setCenter(userLocation)
             }
             
+            if (selectedLocation) {
+                if (selectedLocationMarker) {
+                    selectedLocationMarker.position = selectedLocation
+                } else {
+                    setSelectedLocationMarker(new AdvancedMarkerElement({
+                        map: mapRef.current,
+                        position: selectedLocation,
+                    }));
+                }
+            }
+
             eventMarkers.forEach((marker) => {
                 marker.map = null
             })
-            eventMarkers = []
+            setEventMarkers([])
             if (events.length > 0) {
                 events.forEach((event: Event) => {
                     const pin = getPinIcon(event.type, PinElement);
@@ -112,10 +135,11 @@ const MapComponent = ({ events, handleSelectEvent, setMap, userLocation } : {
                     marker.addListener('click', () => {
                         handleSelectEvent(event.id);
                     });
+                    setEventMarkers([...eventMarkers, marker])
                 });
             }
         }
-    }, [isLoaded, events, userLocation]);
+    }, [isLoaded, events, userLocation, selectedLocation]);
 
     if (loadError) return <div>Error loading maps</div>;
     if (!isLoaded) return <div>Loading...</div>;
@@ -125,6 +149,7 @@ const MapComponent = ({ events, handleSelectEvent, setMap, userLocation } : {
             mapContainerStyle={{ width: "100%", height: "100vh" }}
             center={center}
             zoom={18}
+            onClick={handleMapClick}
             onLoad={(map) => { 
                 mapRef.current = map; 
                 mapRef.current.setOptions(mapOptions); 

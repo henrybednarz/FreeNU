@@ -6,6 +6,7 @@ import json
 import os
 from datetime import datetime, timedelta
 from dotenv import load_dotenv
+import notifs
 
 load_dotenv()
 app = Flask(__name__)
@@ -41,10 +42,20 @@ def handle_preflight():
     # res.headers['Access-Control-Allow-Origin'] = '*'
     return res
 
+def deactivate_old_events():
+    while True:
+        with app.app_context():  # Ensure this runs within the Flask app context
+            cutoff_time = datetime.now() - timedelta(hours=4)
+            outdated_events = Event.query.filter(Event.lastSeen < cutoff_time, Event.active == True).all()
+            for event in outdated_events:
+                event.active = False
+            db.session.commit()
+        time.sleep(3600)
+
 def load_events():
   events = Event.query.filter_by(active=True)
   # Check events for deletion (lazy) or make scheduler to remove them 
-  return ([
+  events = [
     {
       "id": e.id,
       "title": e.title,
@@ -56,7 +67,8 @@ def load_events():
       "lastSeen": e.lastSeen,
       "active": e.active
     }
-    for e in events])
+    for e in events]
+  return events
 
 def load_users():
   users = User.query.all()
@@ -73,7 +85,12 @@ def delete_user(user_id):
   except:
     db.session.rollback()
     return None
-    
+
+def notification_email(event):
+  server = notifs.loadServer()
+  template = notifs.genEmailTemplate(event)
+  addresses = [user["email"] for user in User.query.all()]
+  sendMail(template, addresses, server)
 
 def updateLastSeen(id):
   event = Event.query.filter_by(id=id, active=True).first()
@@ -142,8 +159,12 @@ def submit_event():
   new_event = request.json
   # VALIDATE
   # if (!valid): return 400
-  add_event(new_event)
-  return jsonify(new_event), 200
+  r = add_event(new_event)
+  if r:
+    notification_email(r)
+    return jsonify(new_event), 200
+  else:
+    return "fail", 400
 
 @app.route('/api/sighting/<int:event_id>', methods=['POST', 'OPTIONS'])
 def update_event(event_id):
@@ -186,4 +207,5 @@ def removeUser(id):
     return "fail", 400
 
 if __name__ == '__main__':
-  app.run(debug=True)
+    threading.Thread(target=deactivate_old_events, daemon=True).start()
+    app.run(debug=True)

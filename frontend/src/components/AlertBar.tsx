@@ -4,14 +4,11 @@ import { Alert } from '../interfaces/Alert.tsx'
 
 
 export default function AlertBar({alerts, setAlerts}: { alerts: Alert[], setAlerts: (alerts: Alert[]) => void }) {
-    const removeFromQueue = ((id: string) => {
-        setAlerts(alerts.filter((a) => a.id !== id))
-    })
 
     return (
         <div className="d-flex flex-column">
             {alerts.slice(0, Math.min(alerts.length, 2)).map((alert) => (
-                <AlertComp id={alert.id.toString() + "a"} variant={alert.type} onClose={() => (removeFromQueue(alert.id))} dismissible>
+                <AlertComp id={alert.id} variant={alert.type} dismissible>
                     {alert.text}
                 </AlertComp>
             ))}

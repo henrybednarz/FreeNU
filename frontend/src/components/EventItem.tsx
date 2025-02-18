@@ -4,7 +4,15 @@ import { Event } from '../interfaces/Event.tsx';
 import TargetEvent from './TargetEvent.tsx';
 import StillHere from './StillHere.tsx'
 
-export default function EventItem({event, map, updateSeen, selectedEventId, setSelectedEventId, setIsOpen}: {event: Event, map: google.maps.Map | null, updateSeen: (event: Event, active: boolean) => void, selectedEventId: string, setSelectedEventId: (id: string) => void, setIsOpen: (state: boolean) => void }) {
+export default function EventItem({event, map, updateSeen, selectedEventId, setSelectedEventId, setIsOpen, userLocation }: {
+    event: Event, 
+    map: google.maps.Map | null, 
+    updateSeen: (event: Event, active: boolean) => void, 
+    selectedEventId: string, 
+    setSelectedEventId: (id: string) => void, 
+    setIsOpen: (state: boolean) => void 
+    userLocation: {lat: number, lng: number} | null
+}) {
     const eventTypeIcons: { [key: string]: string } = {
         "drinks": '☕️',
         'food': '🍽',
@@ -16,16 +24,16 @@ export default function EventItem({event, map, updateSeen, selectedEventId, setS
     const [nearby, setNearby] = useState(false);
 
     useEffect(() => {
-        if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition((position) => {
-                const distance = Math.sqrt(Math.pow(event.lat - position.coords.latitude, 2) + Math.pow(event.lng - position.coords.longitude, 2));
-                setNearby(distance < 0.0001);
-            });
+        if (!userLocation) {
+            setNearby(false)
+            return
         }
-    }, [event.lat, event.lng]);
+        const distance = Math.sqrt(Math.pow(event.lat - userLocation.lat, 2) + Math.pow(event.lng - userLocation.lng, 2));
+        setNearby(distance < 0.0001);
+        }, [userLocation]);
 
     useEffect(() => {
-        setShowLastSeen(!recentlySeen && true);
+        setShowLastSeen(!recentlySeen && nearby);
     }, [recentlySeen, nearby]);
 
     return (
@@ -38,7 +46,7 @@ export default function EventItem({event, map, updateSeen, selectedEventId, setS
                 <div className="d-flex justify-content-front">
                     <StillHere event={event} updateSeen={updateSeen}/>
                 </div>
-                : null}
+                : <div></div>}
                 <div className="justify-content-end">
                     <TargetEvent location={{lat: event.lat, lng: event.lng}} map={map} setIsOpen={setIsOpen}/>
                 </div>

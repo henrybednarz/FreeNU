@@ -105,7 +105,6 @@ export default function AddEventSidebar({ isOpen, setIsOpen, map, eventTypes, se
                     text: "problem adding your event, please try again",
                     type: "danger"
                 })
-                // Create a failure alert
             }  
         }
     }
@@ -176,15 +175,18 @@ export default function AddEventSidebar({ isOpen, setIsOpen, map, eventTypes, se
         </Form.Group>
 
         <Form.Group className="mb-3" controlId="eventLocation">
-            <Form.Label>Location</Form.Label>
-            <Form.Control
-            type="text"
-            name="location"
-            value={selectedLocation ? `${selectedLocation.lat.toFixed(6)}, ${selectedLocation.lng.toFixed(6)}` : ""}
-            isInvalid={!!errors.location}
-            plaintext
-            readOnly />
-            <Form.Control.Feedback type="invalid">{errors.location}</Form.Control.Feedback>
+            <div className="d-flex">
+                <Form.Label>Location</Form.Label>
+                <Form.Control
+                type=""
+                name="location"
+                value={""}
+                isInvalid={!!errors.location}
+                plaintext
+                readOnly />
+                <Form.Control.Feedback type="invalid">{errors.location}</Form.Control.Feedback>
+            </div>
+            
             <div className='d-flex justify-content-between mt-2'>
                 <button className="btn border" type="button" onClick={onSelectLocation}>{selectedLocation ? "Change Location": "Select Location"}</button>
                 {selectedLocation && (<TargetEvent setIsOpen={setIsOpen} location={selectedLocation} map={map}/>)}
