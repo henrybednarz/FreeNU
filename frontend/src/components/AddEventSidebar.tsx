@@ -1,5 +1,3 @@
-'use client'
-
 import React, { useState, useEffect } from 'react';
 import { Form, Button } from 'react-bootstrap';
 import TargetEvent from './TargetEvent.tsx';
@@ -38,11 +36,11 @@ export default function AddEventSidebar({ isOpen, setIsOpen, map, eventTypes, se
     })
     const [errors, setErrors] = useState<FormErrors>({})
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
-    const { name, value } = e.target
-    setFormData((prevData) => ({
-        ...prevData,
-        [name]: value,
-    }))
+        const { name, value } = e.target
+        setFormData((prevData) => ({
+            ...prevData,
+            [name]: value,
+        }))
     }
 
     useEffect(() => {
@@ -89,7 +87,7 @@ export default function AddEventSidebar({ isOpen, setIsOpen, map, eventTypes, se
             const ok = await postEvent(formData)
             if (ok) {
                 addAlert({
-                    id: "1",
+                    id: Date.now.toString(),
                     text: "event added successfully!",
                     type: "success"
                 })
@@ -103,7 +101,7 @@ export default function AddEventSidebar({ isOpen, setIsOpen, map, eventTypes, se
                 setIsOpen(false)
             } else {
                 addAlert({
-                    id: "1",
+                    id: Date.now.toString(),
                     text: "problem adding your event, please try again",
                     type: "danger"
                 })
@@ -192,13 +190,11 @@ export default function AddEventSidebar({ isOpen, setIsOpen, map, eventTypes, se
                 {selectedLocation && (<TargetEvent setIsOpen={setIsOpen} location={selectedLocation} map={map}/>)}
             </div>
         </Form.Group>
-
         <Button variant="primary" type="submit">
             Submit
         </Button>
         </Form>
     </div>
-
-        </div>
+    </div>
     )
 }

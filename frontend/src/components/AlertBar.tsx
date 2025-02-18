@@ -9,7 +9,7 @@ export default function AlertBar({alerts, setAlerts}: { alerts: Alert[], setAler
     })
 
     return (
-        <div>
+        <div className="d-flex flex-column">
             {alerts.slice(0, Math.min(alerts.length, 2)).map((alert) => (
                 <AlertComp id={alert.id.toString() + "a"} variant={alert.type} onClose={() => (removeFromQueue(alert.id))} dismissible>
                     {alert.text}

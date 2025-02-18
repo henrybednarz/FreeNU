@@ -5,10 +5,10 @@
   top: 0;
   left: -50vh;
   background-color: #f8f9fa;
-  overflow-y: auto;
   transition: left 0.3s ease;
   padding: 20px;
   box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+  overflow-y: auto;
 }
 
 .sidebar.active {
@@ -92,12 +92,6 @@ body {
   display: flex;
   flex-direction: column;
   flex-grow: 1;
-  overflow: hidden;
-}
-
-.events-list {
-  flex-grow: 1; /* Pushes the email box to the bottom */
-  overflow-y: auto; /* Allows scrolling for events */
 }
 
 .info-box {
@@ -105,4 +99,11 @@ body {
   background: #f8f9fa;
   text-align: center;
   border-top: 1px solid #ddd;
+}
+
+.addEventButton {
+  position: absolute;
+  bottom: 3%; 
+  right: 1%; 
+  font-size: 1.8rem
 }

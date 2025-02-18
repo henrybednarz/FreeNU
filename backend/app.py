@@ -124,6 +124,7 @@ def add_user(data: dict):
     new_user = User(
       email=data["email"]
     )
+    print(data)
     db.session.add(new_user)
     db.session.commit()
     return new_user
@@ -170,6 +171,7 @@ def get_users():
 def addUser():
   data = request.json
   r = add_user(data)
+  print(r)
   if r:
     return "success", 200
   else:
