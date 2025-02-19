@@ -16,7 +16,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] = "postgresql://neondb_owner:H1NBVm2YEqWa@
 db = SQLAlchemy(app)
 
 CORS(app)
-
+# m
 EVENT_TYPES = ['drinks', 'food', 'merchandise', 'other']
 email_queue = []
 
