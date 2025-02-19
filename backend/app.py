@@ -202,4 +202,5 @@ def removeUser(id):
 
 if __name__ == '__main__':
     threading.Thread(target=deactivate_old_events, daemon=True).start()
-    app.run(debug=True)
+    port = int(os.getenv("PORT", 5000))  # Use PORT from environment variables
+    app.run(host="0.0.0.0", port=port)
