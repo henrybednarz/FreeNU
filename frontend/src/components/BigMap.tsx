@@ -146,17 +146,19 @@ const MapComponent = ({ events, handleSelectEvent, setMap, userLocation, handleA
     if (!isLoaded) return <div>Loading...</div>;
 
     return (
-        <GoogleMap
-            mapContainerStyle={{ width: "100%", height: "100vh" }}
-            center={center}
-            zoom={18}
-            onClick={handleMapClick}
-            onLoad={(map) => { 
-                mapRef.current = map; 
-                mapRef.current.setOptions(mapOptions); 
-                setMap(map);
-            }}
-        />
+        <div style={{overflow: 'hidden'}}>
+            <GoogleMap
+                mapContainerStyle={{ width: "100%", height: "100vh" }}
+                center={center}
+                zoom={18}
+                onClick={handleMapClick}
+                onLoad={(map) => { 
+                    mapRef.current = map; 
+                    mapRef.current.setOptions(mapOptions); 
+                    setMap(map);
+                }}
+            />
+        </div>
     );
 };
 
