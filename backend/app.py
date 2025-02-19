@@ -6,7 +6,6 @@ import json
 import os
 from datetime import datetime, timedelta
 from dotenv import load_dotenv
-import notifs
 
 load_dotenv()
 app = Flask(__name__)
@@ -17,6 +16,7 @@ db = SQLAlchemy(app)
 CORS(app)
 
 EVENT_TYPES = ['drinks', 'food', 'merchandise', 'other']
+email_queue = []
 
 class Event(db.Model):
   id = db.Column(db.Integer, primary_key=True)
@@ -85,12 +85,6 @@ def delete_user(user_id):
   except:
     db.session.rollback()
     return None
-
-def notification_email(event):
-  server = notifs.loadServer()
-  template = notifs.genEmailTemplate(event)
-  addresses = [user["email"] for user in User.query.all()]
-  sendMail(template, addresses, server)
 
 def updateLastSeen(id):
   event = Event.query.filter_by(id=id, active=True).first()
@@ -161,7 +155,6 @@ def submit_event():
   # if (!valid): return 400
   r = add_event(new_event)
   if r:
-    notification_email(r)
     return jsonify(new_event), 200
   else:
     return "fail", 400
