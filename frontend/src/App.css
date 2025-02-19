@@ -1,9 +1,9 @@
 .sidebar {
-  width: 50vh;
+  width: 85vw;
   height: 100vh;
   position: fixed;
   top: 0;
-  left: -50vh;
+  left: -85vw;
   background-color: #f8f9fa;
   transition: left 0.3s ease;
   padding: 20px;
@@ -20,11 +20,11 @@
 }
 
 .addSidebar {
-  width: 50vh;
+  width: 85vw;
   height: 100vh;
   position: fixed;
   top: 0;
-  left: -50vh;
+  left: -85vw;
   background-color: #f8f9fa;
   overflow-y: auto;
   transition: left 0.3s ease;

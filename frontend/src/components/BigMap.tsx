@@ -8,6 +8,7 @@ const mapOptions = {
     streetViewControl: false,
     fullscreenControl: false,
     zoomControl: false,
+    gestureHandling: "greedy",
     mapTypeControl: false,
     mapId: 'aa178dd973fe1339'
 };
